@@ -2,17 +2,20 @@ const express = require("express");
 const app = express();
 const path = require("path");
 
+// Fix: Let Express trust proxies to properly extract the IP
 app.set('trust proxy', true);
 
-// Serve static files from the public directory
+const PORT = process.env.PORT || 5000;
+
+// Serve static files from 'public' folder
 app.use(express.static(path.join(__dirname, "public")));
 
-// Root route
+// Serve index.html from the 'views' folder
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "index.html"));
 });
 
-// API route
+// API endpoint
 app.get("/api/whoami", (req, res) => {
   const ipaddress = req.ip;
   const language = req.headers["accept-language"];
@@ -26,7 +29,6 @@ app.get("/api/whoami", (req, res) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
