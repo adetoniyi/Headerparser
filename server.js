@@ -2,9 +2,9 @@ const express = require("express");
 const app = express();
 const path = require("path");
 
-const PORT = process.env.PORT || 5000;
+app.set('trust proxy', true);
 
-// Serve static files
+// Serve static files from the public directory
 app.use(express.static(path.join(__dirname, "public")));
 
 // Root route
@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
 
 // API route
 app.get("/api/whoami", (req, res) => {
-  const ipaddress = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+  const ipaddress = req.ip;
   const language = req.headers["accept-language"];
   const software = req.headers["user-agent"];
 
@@ -26,6 +26,7 @@ app.get("/api/whoami", (req, res) => {
 });
 
 // Start server
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
