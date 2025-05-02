@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const path = require("path");
 
+//require('dotenv').config()
+const    bodyParser = require('body-parser');
+
 // Fix: Let Express trust proxies to properly extract the IP
 app.set('trust proxy', true);
 const PORT = process.env.PORT || 5000;
