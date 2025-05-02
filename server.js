@@ -1,30 +1,20 @@
-require('dotenv').config();
-const express = require("express");
+const express = require('express');
+const path = require('path');
 const app = express();
-const path = require("path");
 
-//require('dotenv').config()
-const    bodyParser = require('body-parser');
+// Serve static files from the public directory (for style.css, images, etc.)
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Fix: Let Express trust proxies to properly extract the IP
-app.set('trust proxy', true);
-const PORT = process.env.PORT || 5000;
-
-// Serve static files from 'public' folder
-app.use(express.static(path.join(__dirname, "public")));
-
-// Serve index.html from the 'views' folder
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "views", "index.html"));
+// Route for serving the index.html from views directory
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
 // API endpoint
-app.get("/api/whoami", (req, res) => {
-  // Safely extract the client's IP address
-  const ipaddress = req.headers["x-forwarded-for"]?.split(",")[0] || req.connection.remoteAddress || req.socket.remoteAddress;
-
-  const language = req.headers["accept-language"];
-  const software = req.headers["user-agent"];
+app.get('/api/whoami', (req, res) => {
+  const ipaddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+  const language = req.headers['accept-language'];
+  const software = req.headers['user-agent'];
 
   res.json({
     ipaddress,
@@ -33,8 +23,8 @@ app.get("/api/whoami", (req, res) => {
   });
 });
 
-
 // Start server
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
