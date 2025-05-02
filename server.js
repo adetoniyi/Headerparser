@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -19,7 +20,9 @@ app.get("/", (req, res) => {
 
 // API endpoint
 app.get("/api/whoami", (req, res) => {
-  const ipaddress = req.headers['x-forwarded-for']?.split(',')[0] || req.connection.remoteAddress || req.socket.remoteAddress;
+  // Safely extract the client's IP address
+  const ipaddress = req.headers["x-forwarded-for"]?.split(",")[0] || req.connection.remoteAddress || req.socket.remoteAddress;
+
   const language = req.headers["accept-language"];
   const software = req.headers["user-agent"];
 
