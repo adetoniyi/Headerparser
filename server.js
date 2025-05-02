@@ -1,11 +1,9 @@
 const express = require("express");
 const app = express();
 const path = require("path");
-const bodyParser = require("body-parser");
 
 // Fix: Let Express trust proxies to properly extract the IP
 app.set('trust proxy', true);
-
 const PORT = process.env.PORT || 5000;
 
 // Serve static files from 'public' folder
@@ -18,7 +16,7 @@ app.get("/", (req, res) => {
 
 // API endpoint
 app.get("/api/whoami", (req, res) => {
-  const ipaddress = req.headers['x-forwarded-for']?.split(',')[0] || req.socket.remoteAddress;
+  const ipaddress = req.headers['x-forwarded-for']?.split(',')[0] || req.connection.remoteAddress || req.socket.remoteAddress;
   const language = req.headers["accept-language"];
   const software = req.headers["user-agent"];
 
@@ -28,6 +26,7 @@ app.get("/api/whoami", (req, res) => {
     software
   });
 });
+
 
 // Start server
 app.listen(PORT, () => {
